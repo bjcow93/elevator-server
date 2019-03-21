@@ -76,14 +76,51 @@ func (v *Vator) Current(carID string) FloorDesc {
 	return v.lookupFloors[fid]
 }
 
+// Find distance between 2 floors
+func (v *Vator) Distance(floor1ID, floor2ID string) int {
+	var floor1 int
+	var floor2 int
+
+	for idx, floor := range v.floors {
+		if floor.ID == floor1ID {
+			floor1 = idx
+		} else if floor.ID == floor2ID {
+			floor2 = idx
+		}
+	}
+
+	dist := floor1 - floor2
+
+	if dist < 0 {
+  	return -dist
+	} else {
+		return dist
+	}
+}
+
 // GetNearestCar - which car is located on the closest floor to the given floorID
 func (v *Vator) GetNearestCar(floorID string) (carID string) {
 	// To be copmleted by candidate
-	return ""
+
+		leastDistance := len(v.floors)
+		var closestCar string
+
+		for car, floor := range v.carAtFloor {
+			distance := v.Distance(floor, floorID)
+			if distance < leastDistance {
+				leastDistance = distance
+				closestCar = car
+			}
+    }
+
+	return closestCar
 }
 
 // CallCar - move nearest car to the specified floor
 func (v *Vator) CallCar(floorID string) (err error) {
 	// To be completed by candidate
+	carID := v.GetNearestCar(floorID)
+	v.carAtFloor[carID] = floorID
+
 	return nil
 }
